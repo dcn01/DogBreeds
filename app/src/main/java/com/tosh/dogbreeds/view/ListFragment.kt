@@ -17,15 +17,10 @@ import com.tosh.dogbreeds.R
 import com.tosh.dogbreeds.viewmodel.ListViewModel
 import kotlinx.android.synthetic.main.fragment_list.*
 
-class ListFragment : Fragment() {
+class ListFragment : Fragment(R.layout.fragment_list) {
 
     private lateinit var viewModel : ListViewModel
     private val dogsListAdapter = DogsListAdapter(arrayListOf())
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
-        return inflater.inflate(R.layout.fragment_list, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,25 +34,34 @@ class ListFragment : Fragment() {
             adapter = dogsListAdapter
         }
 
+        refreshLayout.setOnRefreshListener{
+            dogsList.visibility = GONE
+            listError.visibility = GONE
+            loadingView.visibility = VISIBLE
+            viewModel.refresh()
+            refreshLayout.isRefreshing = false
+        }
+
         observeViewModel()
     }
 
     private fun observeViewModel(){
-        viewModel.refresh().observe(this, Observer {
+
+        viewModel.dogs.observe(this, Observer {
             it?.let {
                 dogsList.visibility = VISIBLE
                 dogsListAdapter.updateDogsList(it)
             }
         })
 
-        viewModel.dogsLoadError.observe(this, Observer {
-            it.let {
+        viewModel.dogsLoadError.observe(this, Observer {isError->
+            isError?.let {
                 listError.visibility = if(it) VISIBLE else GONE
             }
         })
 
         viewModel.loading.observe(this, Observer {
-            it.let {
+            it?.let {
                 loadingView.visibility  = if(it) VISIBLE else GONE
                 if (it){
                     listError.visibility = GONE
