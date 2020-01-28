@@ -44,7 +44,9 @@ class DogsListAdapter(val dogsList: ArrayList<DogBreed>): RecyclerView.Adapter<D
 
             view.setOnClickListener {
 
-                Navigation.findNavController(it).navigate(ListFragmentDirections.actioDetailFragment())
+                val action =  ListFragmentDirections.actioDetailFragment()
+                action.dogUuid = dog.uuid
+                Navigation.findNavController(it).navigate(action)
             }
         }
     }

@@ -1,20 +1,21 @@
 package com.tosh.dogbreeds.viewmodel
 
-import androidx.lifecycle.AndroidViewModel
+import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.tosh.dogbreeds.model.DogBreed
+import com.tosh.dogbreeds.model.DogDatabase
+import kotlinx.coroutines.launch
 
-class DetailsViewModel : ViewModel(){
+class DetailsViewModel(application: Application) : BaseViewModel(application){
+
+    val dog =  MutableLiveData<DogBreed>()
 
 
-    fun fetch(): MutableLiveData<DogBreed>{
-        val dogLiveData =  MutableLiveData<DogBreed>()
-        val dog = DogBreed("1", "German Shepherd", "12","breedGroup",
-            "Security","nice","")
+     fun fetchDogDetail(uuid: Int){
+        launch {
+            val dogDetails = DogDatabase(getApplication()).dogDao().getDog(uuid)
 
-        dogLiveData.value = dog
-
-        return dogLiveData
+            dog.value = dogDetails
+        }
     }
 }
