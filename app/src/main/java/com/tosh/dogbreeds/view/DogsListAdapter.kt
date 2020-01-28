@@ -3,51 +3,46 @@ package com.tosh.dogbreeds.view
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.tosh.dogbreeds.R
+import com.tosh.dogbreeds.databinding.ItemDogBinding
 import com.tosh.dogbreeds.model.DogBreed
 import com.tosh.dogbreeds.util.getProgressDrawable
 import com.tosh.dogbreeds.util.loadImage
-import kotlinx.android.synthetic.main.fragment_detail.view.*
 import kotlinx.android.synthetic.main.item_dog.view.*
 
-class DogsListAdapter(val dogsList: ArrayList<DogBreed>): RecyclerView.Adapter<DogsListAdapter.DogViewHolder>() {
+class DogsListAdapter(private val dogsList: ArrayList<DogBreed>) :
+    RecyclerView.Adapter<DogsListAdapter.DogViewHolder>(), DogClickListener{
 
-    fun updateDogsList(newDogsList: List<DogBreed>){
+    fun updateDogsList(newDogsList: List<DogBreed>) {
         dogsList.clear()
         dogsList.addAll(newDogsList)
         notifyDataSetChanged()
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = DogViewHolder(
-        LayoutInflater.from(parent.context).inflate(R.layout.item_dog, parent, false)
+        DataBindingUtil.inflate(
+            LayoutInflater.from(parent.context),
+            R.layout.item_dog,
+            parent,
+            false
+        )
     )
 
     override fun getItemCount() = dogsList.size
 
     override fun onBindViewHolder(holder: DogViewHolder, position: Int) {
-        holder.bind(dogsList[position])
-        holder.view.imageView.loadImage(dogsList[position].imageUrl, getProgressDrawable(holder.view.imageView.context))
+        holder.view.dog = dogsList[position]
+        holder.view.listener = this
     }
 
-    class DogViewHolder(var view: View): RecyclerView.ViewHolder(view){
+    override fun onDogClick(v: View) {
+        val action = ListFragmentDirections.actioDetailFragment()
+        action.dogUuid = v.dogId.text.toString().toInt()
 
-        private val dogName = view.name
-        private val dogLifespan = view.lifespan
-
-
-        fun bind(dog: DogBreed){
-            dogName.text = dog.dogBreed
-            dogLifespan.text = dog.lifespan
-
-            view.setOnClickListener {
-
-                val action =  ListFragmentDirections.actioDetailFragment()
-                action.dogUuid = dog.uuid
-                Navigation.findNavController(it).navigate(action)
-            }
-        }
+        Navigation.findNavController(v).navigate(action)
     }
+    class DogViewHolder(var view: ItemDogBinding) : RecyclerView.ViewHolder(view.root)
 }

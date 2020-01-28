@@ -2,6 +2,12 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    
+    <data>
+        <variable
+            name="dogDetails"
+            type="com.tosh.dogbreeds.model.DogBreed" />
+    </data>
 
 
     <RelativeLayout
@@ -14,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:src="@mipmap/ic_dog_icon"
+            android:imageUrl="@{dogDetails.imageUrl}"
             android:scaleType="fitCenter"
             android:minHeight="200dp"
             android:layout_marginTop="10dp"/>
@@ -22,7 +28,7 @@
         <TextView
             android:id="@+id/dogName"
             android:layout_below="@+id/dogImage"
-            android:text="@string/dog_name"
+            android:text="@{dogDetails.dogBreed}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Title"
@@ -32,7 +38,7 @@
         <TextView
             android:id="@+id/dogPurpose"
             android:layout_below="@+id/dogName"
-            android:text="@string/dog_purpose"
+            android:text="@{dogDetails.breedGroup}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Text"
@@ -42,7 +48,7 @@
         <TextView
             android:id="@+id/dogTemperament"
             android:layout_below="@+id/dogPurpose"
-            android:text="@string/dog_temperament"
+            android:text="@{dogDetails.temperament}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Text"
@@ -52,7 +58,7 @@
         <TextView
             android:id="@+id/dogLifespan"
             android:layout_below="@+id/dogTemperament"
-            android:text="@string/dog_lifespan"
+            android:text="@{dogDetails.lifespan}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Text"
