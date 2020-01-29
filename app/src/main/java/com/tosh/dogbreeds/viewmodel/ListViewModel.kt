@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.tosh.dogbreeds.model.DogBreed
 import com.tosh.dogbreeds.model.DogDatabase
 import com.tosh.dogbreeds.model.DogsApiService
+import com.tosh.dogbreeds.util.NotificationsHelper
 import com.tosh.dogbreeds.util.SharedPreferenceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -55,7 +56,8 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
                 .subscribe(
                     {
                         storeDogsLocally(it)
-                        Toast.makeText(getApplication(), "Retrived from endpoint", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(getApplication(), "Retrieved from endpoint", Toast.LENGTH_SHORT).show()
+                        NotificationsHelper(getApplication()).createNotification()
                     },
                     {
                         dogsLoadError.value = true
